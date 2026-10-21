@@ -1,3 +1,4 @@
+import jwt from "jsonwebtoken";
 import asyncHandler from "../utils/asyncHandler.js";
 
 export const protect = asyncHandler(async (req, res, next) => {
@@ -9,10 +10,16 @@ export const protect = asyncHandler(async (req, res, next) => {
   ) {
     try {
       token = req.headers.authorization.split(" ")[1];
-      // Note: decode JWT token and attach user to req.user here
-      // const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      // req.user = await User.findById(decoded.id).select("-password");
-      next();
+      const decoded = jwt.verify(
+        token,
+        process.env.JWT_SECRET || "default_jwt_secret"
+      );
+      // decoded contains { id, name, email, role } from login payload
+      req.user = {
+        userId: decoded.id,
+        ...decoded,
+      };
+      return next();
     } catch (error) {
       res.status(401);
       throw new Error("Not authorized, token failed");
