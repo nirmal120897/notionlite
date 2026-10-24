@@ -26,7 +26,6 @@ export const Dashboard = () => {
                         <h2 className="text-lg font-medium text-foreground">Welcome to NotionLite</h2>
                         <p className="mt-1 text-sm">Sidebar se koi page select karein ya naya note banayein.</p>
                         <SimpleEditor />
-                        {/* <SimpleEditor /> */}
                     </div>
                 </main>
             </SidebarInset>

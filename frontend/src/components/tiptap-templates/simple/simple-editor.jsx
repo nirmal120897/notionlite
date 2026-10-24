@@ -244,7 +244,21 @@ export function SimpleEditor() {
       }),
     ],
     content,
+    onUpdate: ({ editor }) => {
+      // Get content as JSON
+      const json = editor.getJSON();
+
+      // Get content as HTML
+      const html = editor.getHTML();
+
+      // Get content as plain text
+      const text = editor.getText();
+
+      console.log('JSON:', json);
+    },
   })
+
+
 
   const rect = useCursorVisibility({
     editor,
@@ -284,8 +298,8 @@ export function SimpleEditor() {
           style={{
             ...(isMobile
               ? {
-                  bottom: `calc(100% - ${height - rect.y}px)`,
-                }
+                bottom: `calc(100% - ${height - rect.y}px)`,
+              }
               : {}),
           }}
         >

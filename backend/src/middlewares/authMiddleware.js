@@ -4,6 +4,11 @@ import asyncHandler from "../utils/asyncHandler.js";
 export const protect = asyncHandler(async (req, res, next) => {
   let token;
 
+  console.log(">>", req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer"));
+
+
+
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer")
@@ -15,12 +20,16 @@ export const protect = asyncHandler(async (req, res, next) => {
         process.env.JWT_SECRET || "default_jwt_secret"
       );
       // decoded contains { id, name, email, role } from login payload
+      console.log(">>>>decode", decoded);
+
       req.user = {
         userId: decoded.id,
         ...decoded,
       };
       return next();
     } catch (error) {
+      console.log(">>>error", error);
+
       res.status(401);
       throw new Error("Not authorized, token failed");
     }

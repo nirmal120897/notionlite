@@ -23,6 +23,9 @@ import {
     SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { useAuth } from "@/context/Authcontext"
+import { useEffect, useState } from "react"
+import { toast } from "sonner"
+import { getAllPagesApi } from "@/api/page.api"
 // Menu items list
 const navItems = [
     { title: "Home", icon: Home, url: "/" },
@@ -32,6 +35,19 @@ const navItems = [
 ]
 export function AppSidebar() {
     const { user, logout } = useAuth()
+    const [pages, setpages] = useState([])
+    const fetchpage = async () => {
+        try {
+            const page = await getAllPagesApi()
+            setpages(page.data.data)
+            toast.error("Page fetch sucesfully !!!")
+        } catch (error) {
+            toast.error(error)
+        }
+    }
+    useEffect(() => {
+        fetchpage()
+    }, [])
     return (
         <Sidebar>
             {/* Header: App / Workspace Brand */}
@@ -73,18 +89,18 @@ export function AppSidebar() {
                     </div>
                     <SidebarGroupContent>
                         <SidebarMenu>
-                            <SidebarMenuItem>
-                                <SidebarMenuButton>
-                                    <FileText className="size-4" />
-                                    <span>Getting Started</span>
-                                </SidebarMenuButton>
-                            </SidebarMenuItem>
-                            <SidebarMenuItem>
-                                <SidebarMenuButton>
-                                    <FileText className="size-4" />
-                                    <span>Project Roadmap</span>
-                                </SidebarMenuButton>
-                            </SidebarMenuItem>
+                            {
+                                pages.map((ele) => {
+                                    return (
+                                        <SidebarMenuItem key={ele.pageId}>
+                                            <SidebarMenuButton>
+                                                <FileText className="size-4" />
+                                                <span>{ele.pagename}</span>
+                                            </SidebarMenuButton>
+                                        </SidebarMenuItem>
+                                    )
+                                })
+                            }
                         </SidebarMenu>
                     </SidebarGroupContent>
                 </SidebarGroup>
